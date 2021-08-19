@@ -2,7 +2,7 @@ import socket
 import re
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(('127.0.0.28', 3299))
+sock.bind(('127.0.0.28', 4429))
 clients = {}
 print("Server start")
 

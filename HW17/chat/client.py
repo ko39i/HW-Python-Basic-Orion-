@@ -1,9 +1,7 @@
 import socket
 import threading
 import re
-import argparse
 import json
-
 
 
 def read_sock():
@@ -19,23 +17,23 @@ def read_sock():
             message = "@" + recipient + ", " + " you blocked by this user"
             sock.sendto(('[' + alias + '] ' + message).encode('utf-8'), server)
 
+def set_name():
+    while True:
+        name = input("Enter your name: ")
+        with open("users.json", 'r') as f:
+            existing_names = json.loads(f.read() or "[]")
+        if name in existing_names:
+            print("This name is already taken, please enter another")
+        else:
+            break
+    existing_names.append(name)
+    with open("users.json", 'w') as f:
+        f.write(json.dumps(existing_names))
+    return name
 
 
-server = ('127.0.0.28', 3279)
-f = open("users.json", "r")
-users_data = f.readline()
-alias = input("Your username: ")
-f.close()
-for args in users_data:
-    if users_data == alias:
-        print("Error")
-    else:
-        continue
-f = open("users.json", "w")
-# users_data.append(alias)
-f.write(alias)
-f.close()
-
+server = ('127.0.0.28', 4429)
+alias = set_name()
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind(('', 0))
@@ -44,23 +42,6 @@ blocked_users = []
 
 potik = threading.Thread(target=read_sock)
 potik.start()
-
-# def chek_user():
-#     while True:
-#         data, address = sock.recvfrom(1024)
-#         nickname = re.search("@(.*),", data.decode('utf-8'))
-#         nickname = nickname.group(0)
-#         nickname = list(nickname)
-#         del nickname[0]
-#         del nickname[-1]
-#         nickname = "".join(nickname)
-#         for address in clients:
-#             if clients[address] == "[" + nickname + "]":
-#                 msg = "nickname is unloked"
-#                 sock.sendto((msq).data, server)
-#                 return alias
-#             else:
-#                 break
 
 while True:
     print('1. Send message to group chat')
